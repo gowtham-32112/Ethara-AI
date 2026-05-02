@@ -1,0 +1,23 @@
+/**
+ * Global error handler — catches unhandled errors from controllers/services.
+ */
+function errorHandler(err, req, res, next) {
+  console.error('=== UNHANDLED ERROR ===');
+  console.error('Route:', req.method, req.originalUrl);
+  console.error('Message:', err.message);
+  console.error('Stack:', err.stack);
+
+  // Prisma known errors
+  if (err.code === 'P2002') {
+    return res.status(409).json({ error: 'A record with that value already exists' });
+  }
+  if (err.code === 'P2025') {
+    return res.status(404).json({ error: 'Record not found' });
+  }
+
+  const status = err.statusCode || 500;
+  const message = err.message || 'Internal server error';
+  res.status(status).json({ error: message });
+}
+
+module.exports = { errorHandler };
