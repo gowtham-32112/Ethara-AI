@@ -38,7 +38,7 @@ app.use('/api/admin', adminRoutes);
 // ─── Serve Frontend (production) ─────────────────────
 const frontendPath = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendPath));
-app.get('*', (req, res) => {
+app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
